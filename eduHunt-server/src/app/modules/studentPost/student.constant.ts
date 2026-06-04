@@ -1,0 +1,9 @@
+export const PostSearchableFields = [
+  'title',
+  'subject',
+  'district',
+  'class',
+  'curriculum',
+  'studentGender',
+  'teacherGender',
+];

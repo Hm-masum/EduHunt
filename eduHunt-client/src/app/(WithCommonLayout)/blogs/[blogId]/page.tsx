@@ -10,7 +10,7 @@ const BlogDetailsPage = async ({
   const { data: blog } = await getSingleBlog(blogId);
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto px-4">
       <BlogDetails blog={blog} />
     </div>
   );

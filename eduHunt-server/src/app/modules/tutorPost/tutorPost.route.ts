@@ -18,7 +18,7 @@ router.get('/:id', TutorPostController.getSingleTutorPost);
 
 router.delete(
   '/:id',
-  auth(USER_ROLE.tutor),
+  auth(USER_ROLE.tutor,USER_ROLE.admin),
   TutorPostController.deleteTutorPost,
 );
 

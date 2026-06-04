@@ -40,14 +40,17 @@ export const getAllTutorPosts = async () => {
 export const getMyTutorPosts = async () => {
   try {
     const token = await getValidToken();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/tutor-posts`, {
-      headers: {
-        Authorization: token,
-      },
-      next: {
-        tags: ["tutor-posts"],
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_API}/tutor-posts/my-posts`,
+      {
+        headers: {
+          Authorization: token,
+        },
+        next: {
+          tags: ["tutor-posts"],
+        },
+      }
+    );
     const result = res.json();
     return result;
   } catch (error: any) {

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', TutorController.getAllTutors);
 router.get('/:id', TutorController.getSingleTutor);
-router.delete('/:id', TutorController.deleteTutor);
+router.delete('/:id',auth(USER_ROLE.admin), TutorController.deleteTutor);
 router.patch('/:id', auth(USER_ROLE.tutor), TutorController.updateTutor);
 
 export const TutorRoutes = router;

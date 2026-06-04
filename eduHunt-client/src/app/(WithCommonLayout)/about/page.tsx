@@ -3,7 +3,7 @@ import Cover from "@/components/shared/Cover";
 
 const AboutPage = () => {
   return (
-    <div>
+    <div className="max-w-6xl mx-auto px-4">
       <Cover title={"About"} subTitle={"Get in Touch With Us!"} />
       <SendMessage />
     </div>

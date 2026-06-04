@@ -9,7 +9,7 @@ const TutorPostDetailsPage = async ({
   const { postId } = await params;
   const { data: post } = await getSingleTutorPost(postId);
   return (
-    <div>
+    <div className="">
       <TutorPostDetails post={post} />
     </div>
   );

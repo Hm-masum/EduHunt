@@ -36,7 +36,6 @@ const tutorPostSchema = new Schema<TTutorPost>(
       type: String,
       required: true,
     },
-
     curriculum: {
       type: String,
       enum: ['English', 'Bangla'],

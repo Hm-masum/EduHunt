@@ -16,7 +16,7 @@ const createStudentPost = catchAsync(async (req, res) => {
 });
 
 const getAllStudentPosts = catchAsync(async (req, res) => {
-  const result = await StudentPostService.getAllStudentPostsFromDB();
+  const result = await StudentPostService.getAllStudentPostsFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -39,8 +39,8 @@ const getSingleStudentPost = catchAsync(async (req, res) => {
 });
 
 const getMyStudentPosts = catchAsync(async (req, res) => {
-  const { id } = req.user;
-  const result = await StudentPostService.getMyStudentPostsFromDB(id);
+  const { email } = req.user;
+  const result = await StudentPostService.getMyStudentPostsFromDB(email);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

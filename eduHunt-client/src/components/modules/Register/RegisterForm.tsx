@@ -70,6 +70,7 @@ const RegisterForm = () => {
 
         if (result?.success) {
           toast.success(result?.message);
+          router.push("/login");
         }
       }
     } catch (err: any) {
@@ -208,9 +209,24 @@ const RegisterForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Gender</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ""} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Gender" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Gender</SelectLabel>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -243,7 +259,7 @@ const RegisterForm = () => {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select Your Role" />
                       </SelectTrigger>
                     </FormControl>

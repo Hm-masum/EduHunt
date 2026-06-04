@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', StudentController.getAllStudents);
 router.get('/:id', StudentController.getSingleStudent);
-router.delete('/:id', StudentController.deleteStudent);
+router.delete('/:id',auth(USER_ROLE.admin), StudentController.deleteStudent);
 router.patch('/:id', auth(USER_ROLE.student), StudentController.updateStudent);
 
 export const StudentRoutes = router;

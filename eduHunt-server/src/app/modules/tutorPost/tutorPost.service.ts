@@ -2,8 +2,9 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { TutorPost } from './tutorPost.model';
 import { TTutorPost } from './tutorPost.interface';
-
 import { Tutor } from '../tutor/tutor.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { PostSearchableFields } from './tutor.constant';
 
 const createTutorPostIntoDB = async (payload: TTutorPost, userId: string) => {
   const isUserExist = await Tutor.findOne({ user: userId });
@@ -20,13 +21,23 @@ const createTutorPostIntoDB = async (payload: TTutorPost, userId: string) => {
   return result;
 };
 
-const getAllTutorPostsFromDB = async () => {
-  const result = await TutorPost.find().populate('tutorId');
+const getAllTutorPostsFromDB = async (query: Record<string, unknown>) => {
+  const postQuery = new QueryBuilder(TutorPost.find(), query)
+    .search(PostSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await postQuery.modelQuery.populate('tutorId');
   return result;
 };
 
-const getMyTutorPostsFromDB = async (tutorId: string) => {
-  const result = await TutorPost.find({ tutorId: tutorId }).populate('tutorId');
+const getMyTutorPostsFromDB = async (email: string) => {
+  const tutor = await Tutor.findOne({ email });
+  const result = await TutorPost.find({ tutorId: tutor?._id }).populate(
+    'tutorId',
+  );
   return result;
 };
 

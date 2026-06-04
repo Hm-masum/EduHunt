@@ -104,7 +104,7 @@ export default function VerifyOrderPage() {
   if (!orderData) return <div className="p-4">No data found.</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="max-w-6xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Order Verification</h1>
       <div className="grid gap-6 md:grid-cols-2">
         <Card>

@@ -6,6 +6,7 @@ import { revalidateTag } from "next/cache";
 export const createApplyTutorPost = async (data: Record<string, unknown>) => {
   try {
     const token = await getValidToken();
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_API}/apply-tutor-post`,
       {

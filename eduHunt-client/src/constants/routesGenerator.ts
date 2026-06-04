@@ -8,16 +8,16 @@ export const navLinks = [
     path: "/tutors",
   },
   {
-    title: "BLOGS",
-    path: "/blogs",
-  },
-  {
     title: "TUTOR-POSTS",
     path: "/tutor-posts",
   },
   {
     title: "STUDENT-POSTS",
     path: "/student-posts",
+  },
+  {
+    title: "BLOGS",
+    path: "/blogs",
   },
   {
     title: "FAQ",

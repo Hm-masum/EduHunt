@@ -37,6 +37,7 @@ export const getAllStudentPosts = async () => {
       }
     );
     const result = res.json();
+    console.log(result);
     return result;
   } catch (error: any) {
     return Error(error);
@@ -47,7 +48,7 @@ export const getMyStudentPosts = async () => {
   try {
     const token = await getValidToken();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/student-posts`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/student-posts/my-posts`,
       {
         headers: {
           Authorization: token,
@@ -58,6 +59,7 @@ export const getMyStudentPosts = async () => {
       }
     );
     const result = res.json();
+    console.log(result);
     return result;
   } catch (error: any) {
     return Error(error);

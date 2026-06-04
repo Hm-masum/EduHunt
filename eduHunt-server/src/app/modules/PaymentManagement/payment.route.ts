@@ -28,7 +28,7 @@ router.get(
 
 router.delete(
   '/:id',
-  auth(USER_ROLE.tutor, USER_ROLE.student),
+  auth(USER_ROLE.tutor, USER_ROLE.student, USER_ROLE.admin),
   PaymentController.deletePayment,
 );
 

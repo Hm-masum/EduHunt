@@ -3,6 +3,8 @@ import httpStatus from 'http-status';
 import { StudentPost } from './studentPost.model';
 import { TStudentPost } from './studentPost.interface';
 import { Student } from '../student/student.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { PostSearchableFields } from './student.constant';
 
 const createStudentPostIntoDB = async (
   payload: TStudentPost,
@@ -21,15 +23,23 @@ const createStudentPostIntoDB = async (
   return result;
 };
 
-const getAllStudentPostsFromDB = async () => {
-  const result = await StudentPost.find().populate('studentId');
+const getAllStudentPostsFromDB = async (query: Record<string, unknown>) => {
+  const postQuery = new QueryBuilder(StudentPost.find(), query)
+    .search(PostSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await postQuery.modelQuery.populate('studentId');
   return result;
 };
 
-const getMyStudentPostsFromDB = async (studentId: string) => {
-  const result = await StudentPost.find({ studentId: studentId }).populate(
-    'studentId',
-  );
+const getMyStudentPostsFromDB = async (email: string) => {
+  const student = await Student.findOne({ email });
+  const result = await StudentPost.find({
+    studentId: student?._id,
+  }).populate('studentId');
   return result;
 };
 

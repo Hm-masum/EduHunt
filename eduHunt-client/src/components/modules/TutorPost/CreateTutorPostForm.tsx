@@ -14,6 +14,16 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import SectionTitle from "@/components/shared/SectionTitle";
 import { createTutorPost } from "@/services/TutorPost";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ClassOptions } from "@/constants/Class";
 
 const CreateTutorPostForm = () => {
   const form = useForm();
@@ -86,9 +96,27 @@ const CreateTutorPostForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Class</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ""} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Class" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Class</SelectLabel>
+                        {ClassOptions.map((cls) => (
+                          <SelectItem key={cls} value={cls}>
+                            {cls}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -146,9 +174,24 @@ const CreateTutorPostForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Curriculum</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ""} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select curriculum" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Curriculum</SelectLabel>
+                        <SelectItem value="English">English</SelectItem>
+                        <SelectItem value="Bangla">Bangla</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

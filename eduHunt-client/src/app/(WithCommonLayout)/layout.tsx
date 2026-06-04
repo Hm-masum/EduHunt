@@ -6,7 +6,7 @@ const CommonLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="bg-gray-50 dark:bg-black">
       <Navbar />
-      <main className="max-w-7xl mx-auto">{children}</main>
+      <main>{children}</main>
       <Footer />
     </div>
   );

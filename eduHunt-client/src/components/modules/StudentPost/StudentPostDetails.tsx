@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/context/UserContext";
 import { createApplyStudentPost } from "@/services/ApplyStudentPost";
 import { IStudentPost } from "@/types";
 import { ArrowBigRightIcon } from "lucide-react";
@@ -8,12 +9,18 @@ import Image from "next/image";
 import { toast } from "sonner";
 
 const StudentPostDetails = ({ post }: { post: IStudentPost }) => {
+  const { user } = useUser();
+
   const handleApply = async () => {
     try {
       const data = {
         studentId: post.studentId._id,
         tuitionId: post._id,
       };
+
+      if (!user) {
+        return toast.error("You are not authorized !");
+      }
 
       const res = await createApplyStudentPost(data);
       if (res?.success) {

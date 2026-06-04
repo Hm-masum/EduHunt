@@ -11,7 +11,7 @@ const TutorDetailsPage = async ({
   const { data: tutor } = await getSingleTutor(tutorId);
 
   return (
-    <div>
+    < div className="">
       <TutorCardDetails tutor={tutor} />
     </div>
   );

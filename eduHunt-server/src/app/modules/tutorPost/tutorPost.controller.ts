@@ -16,7 +16,7 @@ const createTutorPost = catchAsync(async (req, res) => {
 });
 
 const getAllTutorPosts = catchAsync(async (req, res) => {
-  const result = await TutorPostService.getAllTutorPostsFromDB();
+  const result = await TutorPostService.getAllTutorPostsFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -27,8 +27,8 @@ const getAllTutorPosts = catchAsync(async (req, res) => {
 });
 
 const getMyTutorPosts = catchAsync(async (req, res) => {
-  const { id } = req.user;
-  const result = await TutorPostService.getMyTutorPostsFromDB(id);
+  const { email } = req.user;
+  const result = await TutorPostService.getMyTutorPostsFromDB(email);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

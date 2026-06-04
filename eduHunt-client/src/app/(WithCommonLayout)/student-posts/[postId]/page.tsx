@@ -9,7 +9,7 @@ const StudentPostDetailsPage = async ({
   const { postId } = await params;
   const { data: post } = await getSingleStudentPosts(postId);
   return (
-    <div>
+    <div className="max-w-6xl mx-auto px-4">
       <StudentPostDetails post={post} />
     </div>
   );

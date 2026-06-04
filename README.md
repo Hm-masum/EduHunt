@@ -26,15 +26,15 @@ EduHunt is a full-stack web platform that connects students and tutors. Students
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/Hm-masum/TutorLink
+   git clone https://github.com/Hm-masum/EduHunt
    ```
 2. Navigate to the project folder:
    ```sh
-   cd TutorLink
+   cd eduHunt
    ```
 3. Navigate to the Frontend folder:
    ```sh
-   cd tutorlink-client
+   cd eduHunt-client
    ```
 4. install dependencies:
    ```sh
@@ -46,7 +46,7 @@ EduHunt is a full-stack web platform that connects students and tutors. Students
    ```
 6. Navigate to the Backend folder:
    ```sh
-   cd tutorlink-server
+   cd eduHunt-server
    ```
 7. install dependencies:
    ```sh

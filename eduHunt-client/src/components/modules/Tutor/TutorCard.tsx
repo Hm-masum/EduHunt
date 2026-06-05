@@ -28,7 +28,7 @@ const TutorCard = ({ tutor }: { tutor: ITutor }) => {
         </span>
       </figure>
 
-      <div className="p-5 text-center space-y-3">
+      <div className="p-4 text-center space-y-2">
         <h2 className="text-xl md:text-2xl font-semibold">{tutor.name}</h2>
 
         <div className="flex flex-col items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
@@ -47,7 +47,7 @@ const TutorCard = ({ tutor }: { tutor: ITutor }) => {
         </div>
 
         <Link href={`tutors/${tutor._id}`}>
-          <Button className="bg-purple-700 hover:bg-purple-800 w-full text-white mt-1">
+          <Button className="bg-purple-700 hover:bg-purple-800 w-full text-white">
             <GraduationCap size={16} className="mr-2" />
             Details Bio
           </Button>

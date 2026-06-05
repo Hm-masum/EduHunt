@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const BlogDetails = ({ blog }: { blog: IBlog }) => {
   return (
-    <div className="md:w-2/3 bg-white dark:bg-black border dark:border-gray-500 shadow-lg rounded-lg mx-auto p-6">
+    <div className="md:w-2/3 bg-white dark:bg-black border dark:border-gray-500 shadow-lg rounded-lg mx-auto p-6 my-6">
       <p className="flex items-center justify-center mx-auto text-purple-500 bg-purple-100 w-fit px-3 py-1 rounded-full">
         <Calendar className="mr-2" />
         {blog.createdAt

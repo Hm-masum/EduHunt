@@ -1,5 +1,6 @@
 "use client";
 
+import { BlockTitle } from "@/components/shared/BlockTitle";
 import { EduCard } from "@/components/shared/EduCard";
 import { InfoRow } from "@/components/shared/InfoRow";
 import { MetricBox } from "@/components/shared/MatricBox";
@@ -33,14 +34,15 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
 
   const handleApply = async () => {
     try {
+      if (!user) {
+        return toast.error("You are not authorized !");
+      }
+
       const data = {
         tutorId: post.tutorId._id,
         tuitionId: post._id,
       };
 
-      if (!user) {
-        return toast.error("You are not authorized !");
-      }
       const res = await createApplyTutorPost(data);
       if (res.success) {
         toast.success("Applied Successfully");
@@ -53,7 +55,7 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 pb-12">
       <div className="relative h-48 bg-gradient-to-r from-purple-900 via-purple-900 to-purple-500">
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "24px 24px" }}
@@ -108,7 +110,7 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm p-6 space-y-4">
             <h2 className="text-sm font-bold uppercase tracking-widest text-purple-600 dark:text-purple-400">
@@ -130,11 +132,9 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
 
         {edu && (
           <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
-            <SectionTitle
-              icon={<GraduationCap size={14} />}
-              label="Education"
-            />
-            <div className="space-y-3">
+            <BlockTitle icon={<GraduationCap size={14} />} label="Education" />
+
+            <div className="space-y-5">
               {(edu?.graduationInstitute || edu?.graduationSubject) && (
                 <EduCard
                   level="Graduation"
@@ -176,22 +176,17 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
         )}
 
         <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5">
-          <SectionTitle icon={<FileText size={14} />} label="Post overview" />
+          <BlockTitle icon={<FileText size={14} />} label="Post overview" />
+
           <div className="grid grid-cols-2 gap-3 mb-4">
             <MetricBox label="Title" value={post?.title} />
             <MetricBox label="Class" value={post?.class} />
             <MetricBox label="Subject" value={post?.subject} />
             <MetricBox label="Curriculum" value={post?.curriculum} />
-            <MetricBox
-              label="Days / week"
-              value={`${post?.daysPerWeek} days`}
-            />
+            <MetricBox label="Days / week" value={`${post?.daysPerWeek} days`}/>
             <MetricBox label="Time" value={post?.tutoringTime} />
             <MetricBox label="Students" value={String(post?.numberOfStudent)} />
-            <MetricBox
-              label="Location"
-              value={`${post?.thana}, ${post?.district}`}
-            />
+            <MetricBox label="Location" value={`${post?.thana}, ${post?.district}`} />
           </div>
 
           <div className="flex items-center justify-between bg-purple-50 dark:bg-purple-900/20 rounded-lg px-4 py-3">
@@ -215,42 +210,5 @@ const TutorPostDetails = ({ post }: { post: ITutorPost }) => {
   );
 };
 
-/* ── Reusable sub-components ── */
-
-const Badge = ({
-  label,
-  color = "purple",
-}: {
-  label: string;
-  color?: "purple" | "green" | "red";
-}) => {
-  const styles = {
-    purple:
-      "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",
-    green:
-      "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    red: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
-  };
-  return (
-    <span
-      className={`text-xs font-medium px-2.5 py-1 rounded-full capitalize ${styles[color]}`}
-    >
-      {label}
-    </span>
-  );
-};
-
-
-const SectionTitle = ({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) => (
-  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-purple-600 dark:text-purple-400 mb-4">
-    {icon} {label}
-  </div>
-);
 
 export default TutorPostDetails;

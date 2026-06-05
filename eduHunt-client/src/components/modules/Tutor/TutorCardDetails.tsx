@@ -1,3 +1,4 @@
+import { BlockTitle } from "@/components/shared/BlockTitle";
 import { EduCard } from "@/components/shared/EduCard";
 import { InfoRow } from "@/components/shared/InfoRow";
 import { ITutor } from "@/types";
@@ -12,8 +13,8 @@ const TutorDetailsPage = ({ tutor }: { tutor: ITutor }) => {
   const edu = tutor?.education;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 pb-16">
-
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 pb-12">
+       {/* hero section */}
       <div className="relative h-48 bg-gradient-to-r from-purple-900 via-purple-900 to-purple-500">
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "24px 24px" }}
@@ -24,7 +25,7 @@ const TutorDetailsPage = ({ tutor }: { tutor: ITutor }) => {
         </Link>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4 space-y-4">
         {/* Tutor Info */}
         <div className="relative -mt-20 bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6">
           <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-end">
@@ -93,12 +94,9 @@ const TutorDetailsPage = ({ tutor }: { tutor: ITutor }) => {
         {/* Education Section */}
         {edu && (
           <div className="mt-4 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm p-6">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-purple-600 dark:text-purple-400 mb-5 flex items-center gap-2">
-              <GraduationCap size={16} /> Education
-            </h2>
+            <BlockTitle icon={<GraduationCap size={14} />} label="Education" />
 
             <div className="space-y-5">
-
               {(edu?.graduationInstitute || edu?.graduationSubject) && (
                 <EduCard
                   level="Graduation"

@@ -1,5 +1,6 @@
 export const ClassOptions = [
   "All",
+  "Nursery",
   "One",
   "Two",
   "Three",
@@ -10,4 +11,7 @@ export const ClassOptions = [
   "Eight",
   "SSC",
   "HSC",
+  "One to Five",
+  "Six to Ten",
+  "SSC and HSC",
 ];

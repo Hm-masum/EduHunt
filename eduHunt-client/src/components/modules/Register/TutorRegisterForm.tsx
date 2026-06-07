@@ -11,10 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import SectionTitle from "@/components/shared/SectionTitle";
 import axios from "axios";
-import { updateTutor } from "@/services/Tutor";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -24,72 +21,47 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { registerTutor } from "@/services/AuthService";
+import { toast } from "sonner";
+import { useUser } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
 
-const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
-  const form = useForm({
-    defaultValues: {
-      name: userData?.name,
-      fatherName: userData?.fatherName,
-      motherName: userData?.motherName,
-      phone: userData?.phone,
-      thana: userData?.thana,
-      district: userData?.district,
-      image: userData?.image,
-      gender: userData?.gender,
-      education: {
-        graduationCurriculum: userData?.education?.graduationCurriculum,
-        graduationSubject: userData?.education?.graduationSubject,
-        graduationInstitute: userData?.education?.graduationInstitute,
-        graduationPassingYear: userData?.education?.graduationPassingYear,
-        graduationResult: userData?.education?.graduationResult,
-
-        higherSecondaryCurriculum:
-          userData?.education?.higherSecondaryCurriculum,
-        higherSecondaryGroup: userData?.education?.higherSecondaryGroup,
-        higherSecondaryInstitute: userData?.education?.higherSecondaryInstitute,
-        higherSecondaryPassingYear:
-          userData?.education?.higherSecondaryPassingYear,
-        higherSecondaryResult: userData?.education?.higherSecondaryResult,
-
-        secondaryCurriculum: userData?.education?.secondaryCurriculum,
-        secondaryGroup: userData?.education?.secondaryGroup,
-        secondaryInstitute: userData?.education?.secondaryInstitute,
-        secondaryPassingYear: userData?.education?.secondaryPassingYear,
-        secondaryResult: userData?.education?.secondaryResult,
-      },
-    },
-  });
-
+const TutorRegisterForm = () => {
+  const form = useForm();
   const {
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = form;
+  const { setIsLoading } = useUser();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      const profileData = {
+      const formData = new FormData();
+      formData.append("file", data.image[0]);
+      formData.append("upload_preset", "book_shop");
+      formData.append("cloud_name", "dge3fjctm");
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dge3fjctm/image/upload",
+        formData,
+      );
+
+      const imageUrl = response.data.secure_url;
+
+      const registerData = {
         ...data,
+        role: "tutor",
+        image: imageUrl,
       };
 
-      if (data.image && data.image.length === 0) {
-        const formData = new FormData();
-        formData.append("file", data.image[0]);
-        formData.append("upload_preset", "book_shop");
-        formData.append("cloud_name", "dge3fjctm");
-        const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/dge3fjctm/image/upload",
-          formData,
-        );
-        const imageUrl = response.data.secure_url;
-        profileData.image = imageUrl;
-      }
+      const result = await registerTutor(registerData);
+      setIsLoading(true);
 
-      const res = await updateTutor(profileData, userData?._id);
-      if (res.success) {
-        toast.success(res.message);
-      }
-      else{
-        toast.error(res.message);
+      if (result?.success) {
+        toast.success(result?.message);
+        router.push("/login");
+      } else {
+        toast.error(result?.message || "Registration failed");
       }
     } catch (err: any) {
       toast.error(err?.message);
@@ -97,13 +69,7 @@ const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto border-2 border-gray-300 rounded-xl flex-grow w-full p-5">
-      <SectionTitle
-        title="Update Your"
-        colorWord="Profile"
-        subtitle="Keep your profile fresh and accurate"
-      />
-
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div className="flex flex-col md:flex-row items-center gap-5 w-full">
@@ -169,6 +135,40 @@ const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
           <div className="flex flex-col md:flex-row items-center gap-5 w-full">
             <FormField
               control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      {...field}
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-5 w-full">
+            <FormField
+              control={form.control}
               name="thana"
               render={({ field }) => (
                 <FormItem className="w-full">
@@ -197,15 +197,20 @@ const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-5 w-full">
-            <div className="w-full gap-2">
-              <label className="block mb text-sm">Image</label>
-              <div className="mt-2">
-                <input
-                  type="file"
-                  {...register("image")}
-                  className="w-full p-2 border rounded-md border-gray-300 text-gray-900"
-                />
-              </div>
+            <div className="space-y-2 w-full">
+              <label className="block text-sm">Profile Photo</label>
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                className="w-full pr-2 border rounded-md border-gray-300 text-gray-900"
+                {...register("image", { required: true })}
+              />
+              {errors.image && (
+                <span className="text-red-500 text-xs">
+                  This field is required
+                </span>
+              )}
             </div>
 
             <FormField
@@ -507,8 +512,11 @@ const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
             />
           </div>
 
-          <Button type="submit" className="mt-3 w-full bg-purple-700 py-3">
-            {isSubmitting ? "Updating...." : "Update Profile"}
+          <Button
+            type="submit"
+            className="mt-3 w-full bg-purple-700 py-3 dark:text-white"
+          >
+            {isSubmitting ? "Registering...." : "Register"}
           </Button>
         </form>
       </Form>
@@ -516,4 +524,4 @@ const UpdateTutorProfileForm = ({ userData }: { userData: any }) => {
   );
 };
 
-export default UpdateTutorProfileForm;
+export default TutorRegisterForm;

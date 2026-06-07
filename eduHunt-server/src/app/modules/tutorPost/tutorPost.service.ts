@@ -21,16 +21,36 @@ const createTutorPostIntoDB = async (payload: TTutorPost, userId: string) => {
   return result;
 };
 
-const getAllTutorPostsFromDB = async (query: Record<string, unknown>) => {
-  const postQuery = new QueryBuilder(TutorPost.find(), query)
+const getAllTutorPostsFromDB = async (
+  query: Record<string, unknown>,
+) => {
+  const { gender, ...restQuery } = query;
+
+  const postQuery = new QueryBuilder(
+    TutorPost.find(),
+    restQuery,
+  )
     .search(PostSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const result = await postQuery.modelQuery.populate('tutorId');
-  return result;
+  let result = await postQuery.modelQuery.populate({
+    path: 'tutorId',
+    match: gender ? { gender } : {},
+  });
+
+  if (gender) {
+    result = result.filter((post: any) => post.tutorId);
+  }
+
+  const meta = await postQuery.countTotal();
+
+  return {
+    meta,
+    data: result,
+  };
 };
 
 const getMyTutorPostsFromDB = async (email: string) => {

@@ -7,7 +7,7 @@ const StudentPostsPage = async () => {
   return (
     <div className="max-w-6xl mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 my-10">
-        {postData?.map((posts: IStudentPost, idx: number) => (
+        {postData?.data?.map((posts: IStudentPost, idx: number) => (
           <StudentPostCard key={idx} posts={posts} />
         ))}
       </div>

@@ -10,9 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
-import Link from "next/link";
-import logo from "../../../assets/logo.png";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import {
@@ -24,12 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { registerStudent, registerTutor } from "@/services/AuthService";
+import { registerStudent } from "@/services/AuthService";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 
-const RegisterForm = () => {
+const StudentRegisterForm = () => {
   const form = useForm();
   const {
     register,
@@ -46,32 +43,25 @@ const RegisterForm = () => {
       formData.append("cloud_name", "dge3fjctm");
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/dge3fjctm/image/upload",
-        formData
+        formData,
       );
 
       const imageUrl = response.data.secure_url;
 
       const registerData = {
         ...data,
+        role: "student",
         image: imageUrl,
       };
 
-      if (data.role == "tutor") {
-        const result = await registerTutor(registerData);
-        setIsLoading(true);
+      const result = await registerStudent(registerData);
+      setIsLoading(true);
 
-        if (result?.success) {
-          toast.success(result?.message);
-          router.push("/login");
-        }
+      if (result?.success) {
+        toast.success(result?.message);
+        router.push("/login");
       } else {
-        const result = await registerStudent(registerData);
-        setIsLoading(true);
-
-        if (result?.success) {
-          toast.success(result?.message);
-          router.push("/login");
-        }
+        toast.error(result?.message || "Registration failed");
       }
     } catch (err: any) {
       toast.error(err?.message);
@@ -79,17 +69,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="border shadow border-gray-300 rounded-xl flex-grow w-full p-5 bg-white dark:bg-gray-800">
-      <div className="flex items-center space-x-4 my-5">
-        <Image width={50} height={50} src={logo} alt="" />
-        <div>
-          <h1 className="text-xl font-semibold">Register</h1>
-          <p className="font-extralight text-sm text-gray-600 dark:text-white">
-            Join us today and start your journey!
-          </p>
-        </div>
-      </div>
-
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div className="flex flex-col md:flex-row items-center gap-5 w-full">
@@ -187,20 +167,50 @@ const RegisterForm = () => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-5 w-full">
-            <div className="w-full gap-2">
-              <label className="block mb text-sm">Image</label>
-              <div className="mt-2">
-                <input
-                  type="file"
-                  {...register("image", { required: true })}
-                  className="w-full p-2 border rounded-md border-gray-300 text-gray-900"
-                />
-                {errors.image && (
-                  <span className="text-red-500 text-xs">
-                    This field is required
-                  </span>
-                )}
-              </div>
+            <FormField
+              control={form.control}
+              name="thana"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Thana</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>District</FormLabel>
+                  <FormControl>
+                    <Input {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-5 w-full">
+            <div className="space-y-2 w-full">
+              <label className="block text-sm">Profile Photo</label>
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                className="w-full pr-2 border rounded-md border-gray-300 text-gray-900"
+                {...register("image", { required: true })}
+              />
+              {errors.image && (
+                <span className="text-red-500 text-xs">
+                  This field is required
+                </span>
+              )}
             </div>
 
             <FormField
@@ -233,65 +243,6 @@ const RegisterForm = () => {
             />
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-5 w-full">
-            <FormField
-              control={form.control}
-              name="thana"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Thana</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Your Role" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Role</SelectLabel>
-                        <SelectItem value="student">Student</SelectItem>
-                        <SelectItem value="tutor">Tutor</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="district"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>District</FormLabel>
-                  <FormControl>
-                    <Input {...field} value={field.value || ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
           <Button
             type="submit"
             className="mt-3 w-full bg-purple-700 py-3 dark:text-white"
@@ -300,15 +251,8 @@ const RegisterForm = () => {
           </Button>
         </form>
       </Form>
-
-      <p className="text-sm text-gray-600 dark:text-white text-center my-3">
-        Already have an account ?{" "}
-        <Link href="/login" className="text-purple-600 font-semibold">
-          Login
-        </Link>
-      </p>
     </div>
   );
 };
 
-export default RegisterForm;
+export default StudentRegisterForm;

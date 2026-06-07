@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TTutorPost } from './tutorPost.interface';
+import { ClassOptionsEnum } from '../../interface/classOptions';
 
 const tutorPostSchema = new Schema<TTutorPost>(
   {
@@ -22,6 +23,7 @@ const tutorPostSchema = new Schema<TTutorPost>(
     },
     class: {
       type: String,
+      enum: ClassOptionsEnum,
       required: true,
     },
     daysPerWeek: {

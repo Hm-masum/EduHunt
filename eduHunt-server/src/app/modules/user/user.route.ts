@@ -6,6 +6,7 @@ import express from 'express';
 const router = express.Router();
 
 router.post('/create-student', UserController.createStudent);
+router.post('/create-admin', UserController.createAdmin);
 router.post('/create-tutor', UserController.createTutor);
 router.post('/login', UserController.loginUser);
 router.post('/refresh-token', UserController.refreshToken);

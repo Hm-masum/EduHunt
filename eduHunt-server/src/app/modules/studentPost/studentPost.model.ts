@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TStudentPost } from './studentPost.interface';
+import { ClassOptionsEnum } from '../../interface/classOptions';
 
 const studentPostSchema = new Schema<TStudentPost>(
   {
@@ -45,6 +46,7 @@ const studentPostSchema = new Schema<TStudentPost>(
     },
     class: {
       type: String,
+      enum: ClassOptionsEnum,
       required: true,
     },
     subject: {

@@ -23,12 +23,44 @@ export const createTutorPost = async (data: Record<string, unknown>) => {
   }
 };
 
-export const getAllTutorPosts = async () => {
+export const getAllTutorPosts = async (
+  searchText?: string,
+  className?: string,
+  carriculam?: string,
+  gender?: string,
+  page?: string | number,
+  limit?: string | number,
+) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/tutor-posts`, {
+    const url = new URL(`${process.env.NEXT_PUBLIC_BASE_API}/tutor-posts`);
+
+    if (searchText) {
+      url.searchParams.append("searchText", searchText);
+    }
+    if (className) {
+      url.searchParams.append("class", className);
+    }
+    if (carriculam) {
+      url.searchParams.append("carriculam", carriculam);
+    }
+    if (gender) {
+      url.searchParams.append("gender", gender);
+    }
+    if (page) {
+      url.searchParams.append("page", page.toString());
+    }
+    if (limit) {
+      url.searchParams.append("limit", limit.toString());
+    }
+
+    const res = await fetch(url.toString(), {
+      headers: {
+        "Content-Type": "application/json",
+      },
       next: {
         tags: ["tutor-posts"],
       },
+      cache: "no-store",
     });
     const result = res.json();
     return result;
@@ -49,7 +81,7 @@ export const getMyTutorPosts = async () => {
         next: {
           tags: ["tutor-posts"],
         },
-      }
+      },
     );
     const result = res.json();
     return result;
@@ -66,7 +98,7 @@ export const getSingleTutorPost = async (postId: string) => {
         next: {
           tags: ["tutor-posts"],
         },
-      }
+      },
     );
     const data = await res.json();
     return data;
@@ -77,7 +109,7 @@ export const getSingleTutorPost = async (postId: string) => {
 
 export const updateTutorPost = async (
   postData: Record<string, unknown>,
-  postId: string
+  postId: string,
 ) => {
   try {
     const token = await getValidToken();
@@ -90,7 +122,7 @@ export const updateTutorPost = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify(postData),
-      }
+      },
     );
     revalidateTag("tutor-posts");
     const result = await res.json();
@@ -110,7 +142,7 @@ export const DeleteTutorPost = async (postId: string): Promise<any> => {
         headers: {
           Authorization: token,
         },
-      }
+      },
     );
     revalidateTag("tutor-posts");
     const result = await res.json();

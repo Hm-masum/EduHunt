@@ -3,11 +3,11 @@
 import { getValidToken } from "@/lib/verifyToken";
 import { revalidateTag } from "next/cache";
 
-export const getAllStudents = async () => {
+export const getAllAdmins = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/students`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/admins`, {
       next: {
-        tags: ["Students"],
+        tags: ["Admins"],
       },
     });
     const result = res.json();
@@ -17,13 +17,13 @@ export const getAllStudents = async () => {
   }
 };
 
-export const getSingleStudent = async (studentId: string) => {
+export const getSingleAdmin = async (adminId: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/students/${studentId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/admins/${adminId}`,
       {
         next: {
-          tags: ["Students"],
+          tags: ["Admins"],
         },
       }
     );
@@ -34,24 +34,24 @@ export const getSingleStudent = async (studentId: string) => {
   }
 };
 
-export const updateStudent = async (
-  studentData: Record<string, unknown>,
-  studentId: string
+export const updateAdmin = async (
+  adminData: Record<string, unknown>,
+  adminId: string
 ) => {
   try {
     const token = await getValidToken();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/students/${studentId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/admins/${adminId}`,
       {
         method: "PATCH",
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(studentData),
+        body: JSON.stringify(adminData),
       }
     );
-    revalidateTag("Students");
+    revalidateTag("Admins");
     const result = await res.json();
     return result;
   } catch (error: any) {
@@ -59,11 +59,11 @@ export const updateStudent = async (
   }
 };
 
-export const deleteStudent = async (studentId: string): Promise<any> => {
+export const deleteAdmin = async (adminId: string): Promise<any> => {
   try {
     const token = await getValidToken();
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/students/${studentId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/admins/${adminId}`,
       {
         method: "DELETE",
         headers: {
@@ -71,7 +71,7 @@ export const deleteStudent = async (studentId: string): Promise<any> => {
         },
       }
     );
-    revalidateTag("Students");
+    revalidateTag("Admins");
     const result = await res.json();
     return result;
   } catch (error: any) {

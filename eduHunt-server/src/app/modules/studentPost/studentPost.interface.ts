@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { IClassOptions } from '../../interface/classOptions';
 
 export type TStudentPost = {
   studentId: Types.ObjectId;
@@ -11,7 +12,7 @@ export type TStudentPost = {
   thana: string;
   district: string;
   curriculum: 'English' | 'Bangla';
-  class: string;
+  class: IClassOptions;
   subject: string;
   daysPerWeek: string;
   salary: string;

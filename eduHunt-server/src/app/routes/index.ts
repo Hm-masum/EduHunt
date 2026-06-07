@@ -8,6 +8,8 @@ import { TutorPostRoutes } from '../modules/tutorPost/tutorPost.route';
 import { ApplyTutorPostRoutes } from '../modules/applyTutorPost/applyTutorPost.route';
 import { ApplyStudentPostRoutes } from '../modules/applyStudentPost/applyStudentPost.route';
 import { PaymentRoutes } from '../modules/PaymentManagement/payment.route';
+import { MetaRoutes } from '../modules/meta/meta.routes';
+import { AdminRoutes } from '../modules/admin/admin.routes';
 const router = Router();
 
 const moduleRoutes = [
@@ -28,6 +30,10 @@ const moduleRoutes = [
     route: TutorRoutes,
   },
   {
+    path: '/admins',
+    route: AdminRoutes,
+  },
+  {
     path: '/student-posts',
     route: StudentPostRoutes,
   },
@@ -46,6 +52,10 @@ const moduleRoutes = [
   {
     path: '/payment',
     route: PaymentRoutes,
+  },
+  {
+    path: '/meta',
+    route: MetaRoutes,
   },
 ];
 

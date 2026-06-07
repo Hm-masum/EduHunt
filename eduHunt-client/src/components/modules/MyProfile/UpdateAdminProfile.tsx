@@ -24,8 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { updateAdmin } from "@/services/Admin";
 
-const UpdateStudentProfileForm = ({ userData }: { userData: any }) => {
+const UpdateAdminProfileForm = ({ userData }: { userData: any }) => {
   const form = useForm({
     defaultValues: {
       name: userData?.name,
@@ -63,7 +64,7 @@ const UpdateStudentProfileForm = ({ userData }: { userData: any }) => {
         profileData.image = imageUrl;
       }
 
-      const res = await updateStudent(profileData, userData?._id);
+      const res = await updateAdmin(profileData, userData?._id);
       if (res.success) {
         toast.success(res.message);
       }
@@ -226,4 +227,4 @@ const UpdateStudentProfileForm = ({ userData }: { userData: any }) => {
   );
 };
 
-export default UpdateStudentProfileForm;
+export default UpdateAdminProfileForm;

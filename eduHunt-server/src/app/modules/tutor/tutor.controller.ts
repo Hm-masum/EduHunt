@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendResponse';
 import { TutorService } from './tutor.service';
 
 const getAllTutors = catchAsync(async (req, res) => {
-  const result = await TutorService.getAllTutorsFromDB();
+  const result = await TutorService.getAllTutorsFromDB(req?.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -24,15 +24,30 @@ const createStudentPostIntoDB = async (
 };
 
 const getAllStudentPostsFromDB = async (query: Record<string, unknown>) => {
-  const postQuery = new QueryBuilder(StudentPost.find(), query)
+  const { gender, ...restQuery } = query;
+
+  const postQuery = new QueryBuilder(StudentPost.find(), restQuery)
     .search(PostSearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const result = await postQuery.modelQuery.populate('studentId');
-  return result;
+  let result = await postQuery.modelQuery.populate({
+    path: 'studentId',
+    match: gender ? { gender } : {},
+  });
+
+  if (gender) {
+    result = result.filter((post: any) => post.studentId);
+  }
+
+  const meta = await postQuery.countTotal();
+
+    return {
+    meta,
+    data: result,
+  };
 };
 
 const getMyStudentPostsFromDB = async (email: string) => {

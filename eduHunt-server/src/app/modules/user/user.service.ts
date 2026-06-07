@@ -11,6 +11,8 @@ import mongoose from 'mongoose';
 import { createToken } from './user.utils';
 import config from '../../config';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { Admin } from '../admin/admin.model';
+import { TAdmin } from '../admin/admin.interface';
 
 const createStudentIntoDB = async (payload: TStudent) => {
   const existingUser = await User.isUserExistsEmail(payload.email);
@@ -55,6 +57,49 @@ const createStudentIntoDB = async (payload: TStudent) => {
   }
 };
 
+const createAdminIntoDB = async (payload: TAdmin) => {
+  const existingUser = await User.isUserExistsEmail(payload.email);
+  if (existingUser) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is already exist');
+  }
+
+  const userData: Partial<TUser> = {};
+  userData.password = payload.password;
+  userData.role = 'admin';
+  userData.email = payload.email;
+  userData.image = payload.image;
+  userData.name = payload.name;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const newUser = await User.create([userData], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+
+    payload.user = newUser[0]._id;
+
+    const newAdmin = await Admin.create([payload], { session });
+
+    if (!newAdmin) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create admin');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return newAdmin;
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
+  }
+};
+
 const createTutorIntoDB = async (payload: TTutor) => {
   const existingUser = await User.isUserExistsEmail(payload.email);
   if (existingUser) {
@@ -80,15 +125,15 @@ const createTutorIntoDB = async (payload: TTutor) => {
 
     payload.user = newUser[0]._id;
 
-    const newStudent = await Tutor.create([payload], { session });
-    if (!newStudent) {
+    const newTutor = await Tutor.create([payload], { session });
+    if (!newTutor) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create tutor');
     }
 
     await session.commitTransaction();
     await session.endSession();
 
-    return newStudent;
+    return newTutor;
   } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -177,12 +222,17 @@ const getMe = async (userId: string, role: string) => {
     result = await Tutor.findOne({ user: userId }).populate('user');
   }
 
+  if (role === 'admin') {
+    result = await Admin.findOne({ user: userId }).populate('user');
+  }
+
   return result;
 };
 
 export const UserServices = {
   createStudentIntoDB,
   createTutorIntoDB,
+  createAdminIntoDB,
   loginUser,
   refreshToken,
   getMe,

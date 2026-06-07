@@ -1,11 +1,12 @@
 import { Types } from 'mongoose';
+import { IClassOptions } from '../../interface/classOptions';
 
 export type TTutorPost = {
   tutorId?: Types.ObjectId;
   title: string;
   tutoringTime: string;
   numberOfStudent: string;
-  class: string;
+  class: IClassOptions;
   daysPerWeek: string;
   thana: string;
   district: string;
@@ -13,3 +14,4 @@ export type TTutorPost = {
   subject: string;
   salary: number;
 };
+

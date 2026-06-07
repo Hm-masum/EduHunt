@@ -4,10 +4,23 @@ import { Tutor } from './tutor.model';
 import { TTutor } from './tutor.interface';
 import { TUser } from '../user/user.interface';
 import { User } from '../user/user.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { tutorSearchableFields } from './tutor.constant';
 
-const getAllTutorsFromDB = async () => {
-  const result = await Tutor.find();
-  return result;
+const getAllTutorsFromDB = async (query: Record<string, unknown>) => {
+  const tutorQuery = new QueryBuilder(Tutor.find(), query)
+    .search(tutorSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await tutorQuery.modelQuery;
+  const meta = await tutorQuery.countTotal();
+  return {
+    meta,
+    data: result,
+  };
 };
 
 const getSingleTutorFromDB = async (id: string) => {

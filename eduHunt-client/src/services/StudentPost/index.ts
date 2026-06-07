@@ -15,7 +15,7 @@ export const createStudentPost = async (data: Record<string, unknown>) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }
+      },
     );
     revalidateTag("student-posts");
 
@@ -26,15 +26,51 @@ export const createStudentPost = async (data: Record<string, unknown>) => {
   }
 };
 
-export const getAllStudentPosts = async () => {
+export const getAllStudentPosts = async (
+  searchText?: string,
+  className?: string,
+  carriculam?: string,
+  teacherGender?: string,
+  studentGender?: string,
+  page?: string | number,
+  limit?: string | number,
+) => {
   try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_BASE_API}/student-posts`);
+
+    if (searchText) {
+      url.searchParams.append("searchText", searchText);
+    }
+    if (className) {
+      url.searchParams.append("class", className);
+    }
+    if (carriculam) {
+      url.searchParams.append("carriculam", carriculam);
+    }
+    if (teacherGender) {
+      url.searchParams.append("teacherGender", teacherGender);
+    }
+    if (studentGender) {
+      url.searchParams.append("studentGender", studentGender);
+    }
+    if (page) {
+      url.searchParams.append("page", page.toString());
+    }
+    if (limit) {
+      url.searchParams.append("limit", limit.toString());
+    }
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/student-posts`,
+      url.toString(),
       {
+        headers: {
+          "Content-Type": "application/json",
+        },
         next: {
           tags: ["student-posts"],
         },
-      }
+        cache: "no-store",
+      },
     );
     const result = res.json();
     console.log(result);
@@ -56,7 +92,7 @@ export const getMyStudentPosts = async () => {
         next: {
           tags: ["student-posts"],
         },
-      }
+      },
     );
     const result = res.json();
     console.log(result);
@@ -74,7 +110,7 @@ export const getSingleStudentPosts = async (postId: string) => {
         next: {
           tags: ["student-posts"],
         },
-      }
+      },
     );
     const data = await res.json();
     return data;
@@ -85,7 +121,7 @@ export const getSingleStudentPosts = async (postId: string) => {
 
 export const updateStudentPost = async (
   postData: Record<string, unknown>,
-  postId: string
+  postId: string,
 ) => {
   try {
     const token = await getValidToken();
@@ -98,7 +134,7 @@ export const updateStudentPost = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify(postData),
-      }
+      },
     );
     revalidateTag("student-posts");
     const result = await res.json();
@@ -118,7 +154,7 @@ export const DeleteStudentPost = async (postId: string): Promise<any> => {
         headers: {
           Authorization: token,
         },
-      }
+      },
     );
     revalidateTag("student-posts");
     const result = await res.json();
